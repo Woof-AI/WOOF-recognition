@@ -46,7 +46,8 @@ Pre-trained models based on Audio Spectrogram Transformer (AST) have achieved ex
 Transformer's ability to model global information and long temporal dependencies makes its recognition performance more stable in complex environments. In noisy backgrounds (e.g., traffic noise, environmental noise), the Transformer model still maintains high accuracy, while the traditional LSTM model is often prone to interference, leading to a decrease in recognition accuracy.
 er recommendations.
 
-<img width="515" alt="微信图片_20241120191951" src="https://github.com/user-attachments/assets/14a8c6de-d56e-42e4-9e74-0b4bdcc71d3d">
+<img width="515" alt="_20241120191951" src="https://github.com/user-attachments/assets/626e0235-f2e3-4056-8c16-480e5ff06930">
+
 
 
 ### Model Performance Comparison
