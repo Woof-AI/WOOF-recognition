@@ -3,7 +3,7 @@
 # **WOOF AI** <!-- omit in toc -->
 
 ### Bridging Pet Tech and Blockchain Innovation <!-- omit in toc -->
-![hero](./assets/offline.png)
+![hero](./asset/offline.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
