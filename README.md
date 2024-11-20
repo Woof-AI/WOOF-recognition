@@ -2,10 +2,10 @@
 
 # **WOOF AI** <!-- omit in toc -->
 
-### The first AI meme project on TAO <!-- omit in toc -->
+### Bridging Pet Tech and Blockchain Innovation <!-- omit in toc -->
 ![hero](./assets/title.png)
 
-[Dashboard](https://subnet.chunking.com) • [VectorChat](https://vectorchat.ai) • [Chunking.com](https://chunking.com) • [Toffee](https://medium.com/@vectorchat/introducing-toffee-a-new-era-in-conversational-ai-cfd09c6648ae) • [Lucid](https://github.com/VectorChat/lucid)
+[Dashboard](https://subnet.chunking.com) • [VectorChat](https://vectorchat.ai) • [woof ai.io](https://chunking.com) • [Toffee](https://medium.com/@vectorchat/introducing-toffee-a-new-era-in-conversational-ai-cfd09c6648ae) • [Lucid](https://github.com/VectorChat/lucid)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
