@@ -9,7 +9,7 @@
 
 </div>
 
-#  introduction
+#  Introduction
 
 Welcome to the Chunking subnet, Subnet 56 on the Bittensor Protocol! This subnet is designed to advance the field of Retrieval-Augmented Generation (RAG) by incentivizing the development and service of sophisticated chunking solutions. Specifically, the subnet aims to create, host, and serve an intelligent chunking solution that maximizes intrachunk similarity and interchunk dissimilarity.
 
