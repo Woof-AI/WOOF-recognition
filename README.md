@@ -5,22 +5,14 @@
 ### Bridging Pet Tech and Blockchain Innovation <!-- omit in toc -->
 ![hero](./assets/title.png)
 
-[Dashboard](https://subnet.chunking.com) • [VectorChat](https://vectorchat.ai) • [woof ai.io](https://chunking.com) • [Toffee](https://medium.com/@vectorchat/introducing-toffee-a-new-era-in-conversational-ai-cfd09c6648ae) • [Lucid](https://github.com/VectorChat/lucid)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
-# Introduction
+
+#  introduction
 
 Welcome to the Chunking subnet, Subnet 56 on the Bittensor Protocol! This subnet is designed to advance the field of Retrieval-Augmented Generation (RAG) by incentivizing the development and service of sophisticated chunking solutions. Specifically, the subnet aims to create, host, and serve an intelligent chunking solution that maximizes intrachunk similarity and interchunk dissimilarity.
 
-Explore our subnet [pitch deck]().
-
-Learn more about our project at [woof ai.io]()
-
-_See visualizations of subnet data at [subnet.woof ai.io]()_
-
-_See how organic queries are handled [here](.)._
 
 # Overview
 
