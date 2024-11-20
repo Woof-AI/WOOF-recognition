@@ -31,7 +31,7 @@ Barking vs. Non-Barking - After feature extraction and global modeling, the feat
 
 
 ### Global dependency modeling capabilities
-Transformer's self-attention mechanism allows it to capture long-range dependencies across each time step of the input audio. This is important for audio signals such as the sound of a barking dog, which often has specific rhythmic, pitch and timing variations. Transformer is able to capture these long temporal features more efficiently and accurately than traditional LSTM models.
+Transformer's self-attention mechanism allows it to capture long-range dependencies across each time step of the input audio. This is important for audio signals such as the sound of a barking dog, which exhibits specific rhythmic, pitch and timing variations. Transformer is able to capture these long temporal features more efficiently and accurately than traditional LSTM models.
 
 ### Efficient training and reasoning speed
 The Transformer model has a powerful parallel computing capability, which makes the training process more efficient. Compared with traditional recurrent neural networks such as LSTM, the Transformer model does not rely on the sequential processing of time steps, but calculates the data of all time steps at the same time, which improves the training speed and inference efficiency, and the training time of the Transformer model is usually shorter, especially when dealing with large-scale datasets, and the time required for training can be significantly reduced by efficient parallel computing. time.
