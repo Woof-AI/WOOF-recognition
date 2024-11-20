@@ -1,0 +1,226 @@
+<!-- 文件名：static/index.html -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>狗叫识别模型测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        #result p {
+            font-size: 18px;
+        }
+        #result p.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>狗叫识别模型测试</h1>
+    <div id="controls">
+        <button id="record-btn">开始录音</button>
+        <button id="stop-btn" disabled>停止录音</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        const recordButton = document.getElementById('record-btn');
+        const stopButton = document.getElementById('stop-btn');
+        const resultDiv = document.getElementById('result');
+
+        recordButton.addEventListener('click', async () => {
+            audioChunks = [];
+            resultDiv.innerHTML = '';
+            recordButton.disabled = true;
+            stopButton.disabled = false;
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = e => {
+                        audioChunks.push(e.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { 'type': 'audio/webm; codecs=opus' });
+                        const wavBlob = await convertToWav(audioBlob);
+
+                        // 创建 FormData 并发送到后端
+                        const formData = new FormData();
+                        formData.append('file', wavBlob, 'recording.wav');
+
+                        try {
+                            const response = await fetch('/predict', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('服务器错误，无法完成预测。');
+                            }
+
+                            const data = await response.json();
+                            resultDiv.innerHTML = `
+                                <p>预测结果：<strong>${data.result}</strong></p>
+                                <p>概率：${(data.probability * 100).toFixed(2)}%</p>
+                            `;
+                        } catch (error) {
+                            resultDiv.innerHTML = `<p class="error">错误：${error.message}</p>`;
+                        }
+                    };
+
+                    mediaRecorder.start();
+                } catch (err) {
+                    console.error('录音失败:', err);
+                    alert('无法访问麦克风，请检查浏览器设置。');
+                    recordButton.disabled = false;
+                    stopButton.disabled = true;
+                }
+            } else {
+                alert('您的浏览器不支持录音功能。');
+                recordButton.disabled = false;
+                stopButton.disabled = true;
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+        });
+
+        // 将音频 Blob 转换为 WAV 格式
+        async function convertToWav(blob) {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.onload = function () {
+                    const arrayBuffer = this.result;
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                    audioContext.decodeAudioData(arrayBuffer, function (audioBuffer) {
+                        const wavBuffer = audioBufferToWav(audioBuffer);
+                        const wavBlob = new Blob([wavBuffer], { type: 'audio/wav' });
+                        resolve(wavBlob);
+                    }, function (e) {
+                        console.error('解码音频数据失败:', e);
+                        reject(e);
+                    });
+                };
+                fileReader.readAsArrayBuffer(blob);
+            });
+        }
+
+        // 将 AudioBuffer 转换为 WAV 格式的 ArrayBuffer
+        function audioBufferToWav(buffer, opt) {
+            opt = opt || {};
+
+            const numChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = opt.float32 ? 3 : 1;
+            const bitDepth = format === 3 ? 32 : 16;
+
+            let result;
+            if (numChannels === 2) {
+                result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+            } else {
+                result = buffer.getChannelData(0);
+            }
+
+            return encodeWAV(result, numChannels, sampleRate, format, bitDepth);
+        }
+
+        function interleave(inputL, inputR) {
+            const length = inputL.length + inputR.length;
+            const result = new Float32Array(length);
+
+            let index = 0;
+            let inputIndex = 0;
+
+            while (index < length) {
+                result[index++] = inputL[inputIndex];
+                result[index++] = inputR[inputIndex];
+                inputIndex++;
+            }
+            return result;
+        }
+
+        function encodeWAV(samples, numChannels, sampleRate, format, bitDepth) {
+            const bytesPerSample = bitDepth / 8;
+            const blockAlign = numChannels * bytesPerSample;
+
+            const buffer = new ArrayBuffer(44 + samples.length * bytesPerSample);
+            const view = new DataView(buffer);
+
+            /* RIFF identifier */
+            writeString(view, 0, 'RIFF');
+            /* file length */
+            view.setUint32(4, 36 + samples.length * bytesPerSample, true);
+            /* RIFF type */
+            writeString(view, 8, 'WAVE');
+            /* format chunk identifier */
+            writeString(view, 12, 'fmt ');
+            /* format chunk length */
+            view.setUint32(16, 16, true);
+            /* sample format (raw) */
+            view.setUint16(20, format, true);
+            /* channel count */
+            view.setUint16(22, numChannels, true);
+            /* sample rate */
+            view.setUint32(24, sampleRate, true);
+            /* byte rate (sample rate * block align) */
+            view.setUint32(28, sampleRate * blockAlign, true);
+            /* block align (channel count * bytes per sample) */
+            view.setUint16(32, blockAlign, true);
+            /* bits per sample */
+            view.setUint16(34, bitDepth, true);
+            /* data chunk identifier */
+            writeString(view, 36, 'data');
+            /* data chunk length */
+            view.setUint32(40, samples.length * bytesPerSample, true);
+
+            if (format === 1) { // Raw PCM
+                floatTo16BitPCM(view, 44, samples);
+            } else {
+                writeFloat32(view, 44, samples);
+            }
+
+            return buffer;
+        }
+
+        function floatTo16BitPCM(output, offset, input) {
+            for (let i = 0; i < input.length; i++, offset += 2) {
+                let s = Math.max(-1, Math.min(1, input[i]));
+                output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+        }
+
+        function writeFloat32(output, offset, input) {
+            for (let i = 0; i < input.length; i++, offset += 4) {
+                output.setFloat32(offset, input[i], true);
+            }
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+    </script>
+</body>
+</html>
