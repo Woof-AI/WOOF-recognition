@@ -18,7 +18,7 @@
 This system is designed to demonstrate how to accurately recognize dog barking sounds in audio data using advanced audio recognition techniques. The system adopts the most cutting-edge algorithms in the field of deep learning and is optimized for the characteristics of dog barking, which can efficiently and accurately recognize dog barking in complex environments.
 
 
-### core algorithm
+### Core algorithm
 ### Audio Feature Extraction
 VGGish + STFT - First, the audio data is feature extracted using the VGGish model, which is a CNN model pre-trained on large-scale audio datasets that extracts high-dimensional Mel-spectrogram features of the audio and captures the spectral information of the audio. - The raw audio signal is then converted into a spectrogram using a Short-Time Fourier Transform (STFT). These spectrograms are used as inputs to the Transformer model, which can fully display the time and frequency domain features of the audio signal and provide important input data for subsequent audio classification.
 ### Audio Classification
