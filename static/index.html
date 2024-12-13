@@ -4,7 +4,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>狗叫识别模型测试</title>
+    <title>WOOFAI</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,10 +28,10 @@
     </style>
 </head>
 <body>
-    <h1>狗叫识别模型测试</h1>
+    <h1>WOOFAI</h1>
     <div id="controls">
-        <button id="record-btn">开始录音</button>
-        <button id="stop-btn" disabled>停止录音</button>
+        <button id="record-btn">start record</button>
+        <button id="stop-btn" disabled>stop record</button>
     </div>
     <div id="result"></div>
 
@@ -61,7 +61,7 @@
                         const audioBlob = new Blob(audioChunks, { 'type': 'audio/webm; codecs=opus' });
                         const wavBlob = await convertToWav(audioBlob);
 
-                        // 创建 FormData 并发送到后端
+                       
                         const formData = new FormData();
                         formData.append('file', wavBlob, 'recording.wav');
 
@@ -72,28 +72,28 @@
                             });
 
                             if (!response.ok) {
-                                throw new Error('服务器错误，无法完成预测。');
+                                throw new Error('error');
                             }
 
                             const data = await response.json();
                             resultDiv.innerHTML = `
-                                <p>预测结果：<strong>${data.result}</strong></p>
-                                <p>概率：${(data.probability * 100).toFixed(2)}%</p>
+                                <p>result：<strong>${data.result}</strong></p>
+                                <p>probaly：${(data.probability * 100).toFixed(2)}%</p>
                             `;
                         } catch (error) {
-                            resultDiv.innerHTML = `<p class="error">错误：${error.message}</p>`;
+                            resultDiv.innerHTML = `<p class="error">error：${error.message}</p>`;
                         }
                     };
 
                     mediaRecorder.start();
                 } catch (err) {
-                    console.error('录音失败:', err);
-                    alert('无法访问麦克风，请检查浏览器设置。');
+                    console.error('record failed:', err);
+                    alert('Unable to access microphone, please check your browser settings.');
                     recordButton.disabled = false;
                     stopButton.disabled = true;
                 }
             } else {
-                alert('您的浏览器不支持录音功能。');
+                alert('Your browser does not support recording.');
                 recordButton.disabled = false;
                 stopButton.disabled = true;
             }
@@ -105,7 +105,7 @@
             stopButton.disabled = true;
         });
 
-        // 将音频 Blob 转换为 WAV 格式
+
         async function convertToWav(blob) {
             return new Promise((resolve, reject) => {
                 const fileReader = new FileReader();
@@ -118,7 +118,7 @@
                         const wavBlob = new Blob([wavBuffer], { type: 'audio/wav' });
                         resolve(wavBlob);
                     }, function (e) {
-                        console.error('解码音频数据失败:', e);
+                        console.error('Failed to decode audio data:', e);
                         reject(e);
                     });
                 };
@@ -126,7 +126,7 @@
             });
         }
 
-        // 将 AudioBuffer 转换为 WAV 格式的 ArrayBuffer
+ 
         function audioBufferToWav(buffer, opt) {
             opt = opt || {};
 
