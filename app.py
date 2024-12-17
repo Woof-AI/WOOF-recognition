@@ -103,9 +103,9 @@ async def predict(file: UploadFile = File(...)):
 
         # Determine whether it is a dog barking
         if probability > 0.9997:
-            result = "狗叫"
+            result = "dog bark"
         else:
-            result = "非狗叫"
+            result = "not dog bark"
 
         return JSONResponse({"result": result, "probability": probability})
 
